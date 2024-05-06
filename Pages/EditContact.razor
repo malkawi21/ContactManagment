@@ -1,0 +1,46 @@
+﻿@page "/editcontact/{Id}"
+@inject NavigationManager NavigationManager
+
+<h1>Edit Contact</h1>
+
+<EditForm Model="@contact" OnValidSubmit="@UpdateContact">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <InputText id="firstName" class="form-control" @bind-Value="contact.FirstName" />
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <InputText id="lastName" class="form-control" @bind-Value="contact.LastName" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind-Value="contact.Email" />
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <InputText id="phoneNumber" class="form-control" @bind-Value="contact.PhoneNumber" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Contact</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Contact contact = new Contact();
+
+    protected override void OnInitialized()
+    {
+        // Retrieve contact details by Id (you need to implement this)
+        // Set the contact properties for editing
+    }
+
+    void UpdateContact()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

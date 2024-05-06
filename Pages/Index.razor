@@ -1,0 +1,116 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+<h1>Contact List</h1>
+
+@if (Contacts != null && Contacts.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in Contacts)
+            {
+                <tr>
+                    <td>@contact.FirstName</td>
+                    <td>@contact.LastName</td>
+                    <td>@contact.Email</td>
+                    <td>@contact.PhoneNumber</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditContact(contact)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteContact(contact)">Delete</button>
+                        <button class="btn btn-secondary" @onclick="SortByFirstName">Sort by First Name</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No contacts available.</p>
+}
+
+@code {
+    public List<Contact> Contacts;
+
+    protected override void OnInitialized()
+    {
+        Contacts = new List<Contact>
+        {
+            new Contact { Id = 1, FirstName = "Mohannad", LastName = "Malkawi", Email = "mmalkawi@gmail.com", PhoneNumber = "0798576145" },
+            new Contact { Id = 2, FirstName = "Ahmad", LastName = "Mohsen", Email = "AhmadMohsen@gmail.com", PhoneNumber = "0987654321" }
+        };
+    }
+
+    void EditContact(Contact contact)
+    {
+        // Navigate to EditContact page with contact details
+        NavigationManager.NavigateTo($"/editcontact/{contact.Id}");
+    }
+
+    void DeleteContact(Contact contact)
+    {
+        Contacts.Remove(contact);
+    }
+
+    void SortByFirstName()
+    {
+        Contacts = Contacts.OrderBy(c => c.FirstName).ToList();
+    }
+
+    private Contact selectedContact;
+
+    
+
+}
+
+
+<h2>Add New Contact</h2>
+
+<EditForm Model="@newContact" OnValidSubmit="@AddContact">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <InputText id="firstName" class="form-control" @bind-Value="newContact.FirstName" />
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <InputText id="lastName" class="form-control" @bind-Value="newContact.LastName" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind-Value="newContact.Email" />
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <InputText id="phoneNumber" class="form-control" @bind-Value="newContact.PhoneNumber" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Contact</button>
+</EditForm>
+
+@code {
+    Contact newContact = new Contact();
+
+    void AddContact()
+    {
+        Contacts.Add(newContact);
+        newContact = new Contact(); 
+    }
+
+
+    void ViewContactDetails(Contact contact)
+    {
+        NavigationManager.NavigateTo($"/contactdetails/{contact.Id}");
+    }
+}
